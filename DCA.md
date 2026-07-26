@@ -1,5 +1,5 @@
 ========================================================
-DOUBLERS COMMAND ARCHITECTURE (DCA)
+Dvidvar COMMAND ARCHITECTURE (DCA)
 Version 1.0
 ===========
 
@@ -7,13 +7,13 @@ Status:
 Draft
 
 Project Name:
-Doublers Command Architecture
+Dvidvar Command Architecture
 
 Abbreviation:
 DCA
 
 Part Of:
-Doublers Architecture
+Dvidvar Architecture
 
 Created By:
 Real name (not full):Avyaan
