@@ -1,4 +1,4 @@
-# Doublers
+# Dvidvar
 
 > **An open computer architecture for anyone.**
 
