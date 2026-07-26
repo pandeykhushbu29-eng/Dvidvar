@@ -2,7 +2,7 @@
 
 > **An open computer architecture for anyone.**
 
-Doublers is an open computer architecture consisting of the **Doublers
+Doublers (Nickname of Dvidvar) is an open computer architecture consisting of the **Doublers
 Instruction Set Architecture (ISA)** and the **Doublers Command
 Architecture (DCA)**.
 
