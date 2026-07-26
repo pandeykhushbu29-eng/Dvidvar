@@ -4,9 +4,9 @@ Copyright (c) 2026 Avyaan Mishra
 
 This license applies to:
 
-• Doublers ISA
-• Doublers Command Architecture (DCA)
-• Official Doublers specifications
+• Dvidvar ISA
+• Dvidvar Command Architecture (DCA)
+• Official Dvidvar specifications
 
 ------------------------------------------------------------
 1. PURPOSE
