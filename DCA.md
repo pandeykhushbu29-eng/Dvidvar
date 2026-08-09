@@ -122,7 +122,7 @@ A processor is DCA-compatible only if it satisfies every mandatory requirement d
 
 ## 2.1 Purpose
 
-The Doublers Command Architecture (DCA) defines the hardware execution model of a Doublers-compatible processor. While the Doublers ISA specifies the programmer-visible behavior of instructions, registers, memory, and exceptions, the DCA specifies how compatible hardware shall represent, fetch, decode, and execute those instructions.
+The Doublers Command Architecture defines the hardware execution model of a Doublers-compatible processor. While the Doublers ISA specifies the programmer-visible behavior of instructions, registers, memory, and exceptions, the DCA specifies how compatible hardware shall represent, fetch, decode, and execute those instructions.
 
 This chapter defines the architectural model common to all compliant Doublers processors.
 
@@ -142,7 +142,7 @@ A processor may differ internally in:
 - Power management
 - Physical layout
 
-provided that all externally visible architectural behavior remains fully compatible with the Doublers ISA and this DCA.
+provided that all externally visible architectural behavior remains fully compliant with the Doublers ISA and this DCA.
 
 ---
 
@@ -276,6 +276,55 @@ The exact voltage levels, timing characteristics, transistor implementations, or
 
 Only the architectural meanings of States 2, 4, and 8 are standardized by the DCA.
 
+## 2.6.1 Ternary Logic Mapping
+
+The three active electrical states map directly to the ternary logical values used by the Doublers ISA:
+
+| DCA State | Electrical Level | Trit Value | Logical Meaning | Balanced Ternary |
+| --------- | ---------------- | ---------- | --------------- | ---------------- |
+| 2         | High             | H          | True            | +1               |
+| 4         | Mid              | M          | Unknown         | 0                |
+| 8         | Low              | L          | False           | -1               |
+
+The Doublers ISA uses Kleene's strong three-valued logic (K3) for all logical operations. The Mid state represents uncertainty — a value that is neither definitively true nor false.
+
+This mapping means that:
+- All logical operations (TAND, TOR, TXOR, TNOT) operate directly on the three electrical states.
+- The Mid state propagates through computations: if an input is unknown, the result is unknown when the outcome depends on that input.
+- Binary-compatible behavior is preserved when all trits are High or Low (no Mid values present).
+
+## 2.6.2 Truth Table Summary
+
+The following truth tables define how logical operations work across the three states:
+
+TAND (Ternary AND):
+| TAND | H | M | L |
+| ---- |---|---|---|
+| H    | H | M | L |
+| M    | M | M | L |
+| L    | L | L | L |
+
+TOR (Ternary OR):
+| TOR  | H | M | L |
+| ---- |---|---|---|
+| H    | H | H | H |
+| M    | H | M | M |
+| L    | H | M | L |
+
+TNOT (Ternary NOT):
+| Input | TNOT |
+| ----- | ---- |
+| H     | L    |
+| M     | M    |
+| L     | H    |
+
+TXOR (Ternary XOR):
+| TXOR | H | M | L |
+| ---- |---|---|---|
+| H    | L | M | H |
+| M    | M | M | M |
+| L    | H | M | L |
+
 ---
 
 ## 2.7 Software Visibility
@@ -292,10 +341,12 @@ The electrical representation defined by the DCA is considered an implementation
 
 A processor is DCA-compliant if it:
 
-- Correctly implements the Doublers ISA.
-- Correctly represents the three active electrical states.
-- Correctly handles the OFF power condition.
+- Correctly implements the Doublers ISA, including all ternary logical operations (TAND, TOR, TXOR, TNOT, TNAND, TNOR, TXNOR) using Kleene K3 logic.
+- Correctly represents the three active electrical states (2, 4, 8).
+- Correctly handles the OFF power condition (State 10).
 - Preserves all architecturally visible behavior defined by the ISA and DCA.
+- Ensures that logical operations on definite values (H, L) produce results identical to classical binary logic.
+- Ensures that the Mid state propagates uncertainty through logical operations as defined by K3 logic.
 
 Implementation-specific optimizations are permitted provided they do not alter observable architectural behavior.
 
@@ -1507,652 +1558,181 @@ Given identical processor state and command streams, control-flow decisions shal
 
 Every DCA-compatible processor shall implement control-flow processing exactly as defined by the Doublers ISA and this specification.
 
-# Chapter 16 — Memory Access Processing
+# Chapter 16 — Privilege Management
 
 ## 16.1 Overview
 
-Memory Access Processing defines how a DCA-compatible processor performs architectural memory operations.
-
-All memory accesses shall comply with the requirements of the Doublers ISA and this specification.
-
----
-
-## 16.2 Memory Operations
-
-Architectural memory operations include:
-
-* Memory Read
-* Memory Write
-* Instruction Fetch
-* Stack Access
-
-Additional operations may be defined by future compatible community additions.
-
----
-
-## 16.3 Read Processing
-
-Before reading memory, the processor shall verify:
-
-* Address validity.
-* Read permission.
-* Alignment requirements.
-
-Successful verification permits the read operation to proceed.
-
----
-
-## 16.4 Write Processing
-
-Before writing memory, the processor shall verify:
-
-* Address validity.
-* Write permission.
-* Alignment requirements.
-
-Writes failing verification shall not modify memory.
-
----
-
-## 16.5 Execute Processing
-
-Instruction fetches shall verify execute permission before command retrieval.
-
-Attempting to fetch from a non-executable region shall generate an Execute Protection Exception.
-
----
-
-## 16.6 Memory Consistency
-
-Completed memory operations shall become architecturally visible only after successful command commitment.
-
-Processors shall preserve architectural memory consistency regardless of internal implementation.
-
----
-
-## 16.7 Invalid Memory Access
-
-Invalid memory operations shall generate the corresponding architectural exception before modifying processor state.
-
----
-
-## 16.8 Atomicity
-
-Architecturally atomic memory operations shall complete entirely or have no visible effect.
-
-Partial completion shall not be visible to software.
-
----
-
-## 16.9 Future Compatibility
-
-Future DCA revisions may define additional memory processing mechanisms while preserving Base DCA compatibility.
-
----
-
-## 16.10 Compliance
-
-Every DCA-compatible processor shall correctly perform, validate, and report architectural memory operations according to this specification.
-
-# Chapter 17 — Privilege and Protection Model
-
-## 17.1 Overview
-
-The Privilege and Protection Model defines how a DCA-compatible processor enforces architectural security boundaries.
-
-These mechanisms protect processor resources from unauthorized access.
-
----
-
-## 17.2 Privilege Levels
-
-The Base DCA recognizes the privilege levels defined by the Doublers ISA.
-
-Processors shall correctly distinguish privileged and non-privileged execution.
-
----
-
-## 17.3 Privileged Commands
+The DCA recognizes the privilege levels defined by the Doublers ISA.
 
 Commands designated as privileged by the Doublers ISA shall execute only at the required privilege level.
+
+---
+
+## 16.2 Privilege Verification
 
 Execution from an insufficient privilege level shall generate a Privilege Exception.
 
 ---
 
-## 17.4 Memory Protection
+## 16.3 Privilege Transitions
 
-Processors shall enforce architectural memory permissions.
+Privilege transitions shall follow the architectural rules defined by the Doublers ISA.
 
-Protection mechanisms include:
-
-* Read Permission
-* Write Permission
-* Execute Permission
+The DCA shall preserve all privilege transition behavior.
 
 ---
 
-## 17.5 Register Protection
+## 16.4 Privileged Command Categories
 
-Access to privileged registers shall be restricted according to the architectural privilege model.
+Privileged commands typically include:
 
-Unauthorized access attempts shall generate the appropriate exception.
-
----
-
-## 17.6 State Isolation
-
-Architectural state belonging to privileged execution shall remain protected from unauthorized modification.
+* System register access
+* Interrupt management
+* Memory protection configuration
+* Processor halt
+* Diagnostic access
 
 ---
 
-## 17.7 Exception Protection
+## 16.5 Compliance
 
-Protection violations shall be reported using the exception mechanisms defined by the Doublers ISA.
+Every DCA-compatible processor shall enforce privilege requirements exactly as defined by the Doublers ISA.
 
-Protection failures shall not expose partially modified architectural state.
+# Chapter 17 — Implementation Requirements
 
----
+## 17.1 Overview
 
-## 17.8 Processor Integrity
-
-Protection mechanisms shall preserve processor integrity regardless of software behavior.
-
-Internal implementation techniques remain processor-defined.
+This chapter defines mandatory implementation requirements for all DCA-compatible processors.
 
 ---
 
-## 17.9 Future Expansion
+## 17.2 Mandatory Requirements
 
-Future compatible community additions may define additional protection mechanisms provided Base DCA compatibility is preserved.
+Every DCA-compatible processor shall:
+
+* Implement the three active electrical states (2, 4, 8).
+* Implement the OFF power condition (State 10).
+* Implement all ternary logical operations (TAND, TOR, TXOR, TNOT, TNAND, TNOR, TXNOR) using Kleene K3 logic.
+* Fetch commands deterministically.
+* Decode commands completely.
+* Validate commands before execution.
+* Execute commands according to the Doublers ISA.
+* Generate precise exceptions.
+* Preserve architectural state consistency.
+* Enforce privilege requirements.
+* Maintain command stream integrity.
+
+---
+
+## 17.3 Implementation Freedom
+
+Processor designers remain free to choose:
+
+* Pipeline depth
+* Cache architecture
+* Clock frequency
+* Internal scheduling
+* Superscalar width
+* Speculative execution depth
+* Power management features
+* Physical transistor design
+
+provided all externally visible architectural behavior remains compliant.
+
+---
+
+## 17.4 Performance
+
+Processor performance is implementation-defined.
+
+The DCA defines correctness, not speed.
+
+---
+
+## 17.5 Physical Implementation
+
+Actual physical implementation is processor-defined.
+
+The exact voltage levels, timing characteristics, transistor implementations, or signaling techniques for the three electrical states (2, 4, 8) are implementation-defined.
+
+Only the architectural meanings of the states are standardized by the DCA.
+
+---
+
+## 17.6 Determinism
+
+Given identical architectural state and command input, every DCA-compatible processor shall produce identical architectural results.
+
+---
+
+## 17.7 Testing
+
+Processors shall be testable to verify compliance with this specification.
+
+Test methodologies are implementation-defined.
+
+---
+
+## 17.8 Documentation
+
+Implementors shall document:
+
+* Supported ISA extensions
+* Implementation-defined parameters
+* Electrical state voltage ranges
+* Timing characteristics
+* Power management features
+* Error detection capabilities
+
+---
+
+## 17.9 Future Compatibility
+
+Future DCA revisions shall preserve compatibility with previously defined mandatory behavior whenever practical.
 
 ---
 
 ## 17.10 Compliance
 
-Every DCA-compatible processor shall implement the privilege and protection mechanisms defined by this specification and the Doublers ISA.
+Every DCA-compatible processor shall satisfy all mandatory requirements defined in this chapter.
 
-# Chapter 18 — Processor Reset and Initialization
+# Appendix A — Summary
 
-## 18.1 Overview
+## A.1 DCA Summary
 
-This chapter defines the architectural requirements for processor reset and initialization.
+| Property | Value |
+| -------- | ----- |
+| Architecture Name | Doublers Command Architecture |
+| Version | 1.0 |
+| Electrical States | 3 (High, Mid, Low) + OFF |
+| Logic System | Kleene K3 (three-valued) |
+| Logical Operations | TAND, TOR, TXOR, TNOT, TNAND, TNOR, TXNOR |
+| Command Unit | Architectural Command Unit (ACU) |
+| Pipeline Stages | Fetch, Decode, Validate, Execute, Commit, Advance |
+| Exception Model | Precise |
+| Privilege Levels | Per Doublers ISA |
 
-Every DCA-compatible processor shall enter a well-defined architectural state before beginning execution.
+## A.2 Logical Execution States
 
----
+| State | Value | Type |
+| ----- | ----- | ---- |
+| High  | 2     | Active |
+| Mid   | 4     | Active |
+| Low   | 8     | Active |
+| OFF   | 10    | Power |
 
-## 18.2 Reset Operation
+## A.3 Ternary Logic Operations
 
-Processor reset terminates all currently executing architectural activity.
-
-After reset, the processor shall initialize itself according to the platform initialization procedure.
-
----
-
-## 18.3 Initial Processor State
-
-Following reset, the processor shall establish:
-
-* Program Counter
-* Stack Pointer
-* FLAGS Register
-* General-Purpose Registers
-* Special Registers
-
-Initialization values are platform-defined unless specified by the Doublers ISA.
-
----
-
-## 18.4 Initial Fetch
-
-Following successful initialization, the processor shall begin command fetch from the architectural entry point.
-
-No command execution shall occur before initialization completes.
-
----
-
-## 18.5 Reset Integrity
-
-Processor reset shall leave the architectural state internally consistent.
-
-Partially initialized processor states shall never become visible to software.
+| Operation | Opcode | Description |
+| --------- | ------ | ----------- |
+| TAND      | 0x20   | Trit-wise ternary AND |
+| TOR       | 0x21   | Trit-wise ternary OR |
+| TXOR      | 0x22   | Trit-wise ternary XOR |
+| TNOT      | 0x23   | Trit-wise ternary NOT |
+| TNAND     | 0x24   | Trit-wise ternary NAND |
+| TNOR      | 0x25   | Trit-wise ternary NOR |
+| TXNOR     | 0x26   | Trit-wise ternary XNOR |
 
 ---
 
-## 18.6 Warm Reset
-
-Implementations may support warm reset mechanisms.
-
-Warm reset behavior is implementation-defined provided architectural correctness is preserved.
-
----
-
-## 18.7 Cold Reset
-
-Cold reset returns the processor to its initial architectural state.
-
-Platform-specific initialization procedures may execute before program execution begins.
-
----
-
-## 18.8 Future Compatibility
-
-Future DCA revisions may define additional initialization mechanisms while preserving Base DCA compatibility.
-
----
-
-## 18.9 Compliance
-
-Every DCA-compatible processor shall correctly implement processor reset and initialization according to this specification.
-
-# Chapter 19 — Compliance Requirements
-
-## 19.1 Overview
-
-This chapter defines the minimum requirements necessary for processor compatibility with the Doublers Command Architecture.
-
----
-
-## 19.2 Mandatory Requirements
-
-A compliant processor shall correctly implement:
-
-* Command Fetch
-* Command Decode
-* Command Validation
-* Command Execution
-* Processor State Management
-* Exception Generation
-* Memory Processing
-* Privilege Enforcement
-
----
-
-## 19.3 Architectural Compatibility
-
-Processors shall preserve all mandatory architectural behavior defined by:
-
-* Doublers ISA
-* Doublers Command Architecture
-
----
-
-## 19.4 Internal Freedom
-
-Processor designers may choose any internal implementation technique provided externally visible architectural behavior remains compliant.
-
----
-
-## 19.5 Unsupported Features
-
-Processors shall not advertise support for architectural features that are not correctly implemented.
-
----
-
-## 19.6 Community Additions
-
-Processors implementing compatible community additions shall continue to preserve Base DCA compatibility.
-
----
-
-## 19.7 Compliance Claim
-
-Processors satisfying all mandatory requirements may identify themselves as:
-
-"DCA-Compatible"
-
----
-
-## 19.8 Documentation
-
-Processor documentation shall clearly identify:
-
-* Supported ISA Version
-* Supported DCA Version
-* Implemented community additions
-
----
-
-## 19.9 Future Revisions
-
-Future DCA revisions should preserve compatibility whenever practical.
-
----
-
-## 19.10 Compliance
-
-Only processors satisfying every mandatory requirement of this specification may claim compatibility with the Doublers Command Architecture.
-
-# Chapter 20 — Versioning and Document References
-
-## 20.1 Overview
-
-The Doublers Command Architecture shall use semantic versioning to identify architectural revisions.
-
----
-
-## 20.2 Version Format
-
-Every published DCA specification shall contain:
-
-* Major Version
-* Minor Version
-* Publication Date
-
----
-
-## 20.3 Major Versions
-
-Major versions may introduce architectural changes requiring updated processor implementations.
-
----
-
-## 20.4 Minor Versions
-
-Minor versions primarily provide:
-
-* Documentation improvements
-* Clarifications
-* Optional compatible additions
-* Editorial corrections
-
----
-
-## 20.5 Related Documents
-
-The complete Doublers architecture consists of:
-
-* Doublers ISA Specification
-* Doublers Command Architecture
-* DCA License
-
-Each document serves a separate architectural purpose.
-
----
-
-## 20.6 Authority
-
-When implementation details are concerned:
-
-* The Doublers ISA defines **what** processors shall do.
-* The DCA defines **how** processors shall interpret and execute Doublers commands.
-
-Both documents are normative.
-
----
-
-## 20.7 Future Documentation
-
-Additional project documentation may include:
-
-* CPU Design Guides
-* DoubRun Documentation
-* Developer Guides
-* Community Extension Specifications
-
-These documents do not modify mandatory Base DCA behavior.
-
----
-
-## 20.8 Normative Language
-
-Within this specification:
-
-* **Shall** indicates a mandatory requirement.
-* **Should** indicates a recommendation.
-* **May** indicates optional behavior.
-
----
-
-## 20.9 Completion
-
-This document defines Version 1.0 of the Doublers Command Architecture.
-
-Future revisions shall preserve architectural stability whenever practical.
-
----
-
-## 20.10 Compliance
-
-Processors implementing this specification shall comply with both the Doublers ISA and the Doublers Command Architecture.
-
-# Appendix A — Command Category Reference
-
-## A.1 Overview
-
-This appendix summarizes the architectural command categories recognized by the Doublers Command Architecture.
-
----
-
-## A.2 Arithmetic Commands
-
-Arithmetic commands perform mathematical operations upon architectural operands.
-
-Examples include:
-
-* ADD
-* SUB
-* MUL
-* DIV
-* MOD
-* INC
-* DEC
-* NEG
-
----
-
-## A.3 Logical Commands
-
-Logical commands manipulate binary data.
-
-Examples include:
-
-* AND
-* OR
-* XOR
-* NOT
-
----
-
-## A.4 Memory Commands
-
-Memory commands transfer data between processor registers and memory.
-
-Examples include:
-
-* LOAD
-* STORE
-* PUSH
-* POP
-
----
-
-## A.5 Control Flow Commands
-
-Control flow commands modify sequential execution.
-
-Examples include:
-
-* JMP
-* CALL
-* RET
-* Conditional Branches
-
----
-
-## A.6 System Commands
-
-System commands interact with processor services.
-
-Examples include:
-
-* SYSCALL
-* BREAK
-* HALT
-* NOP
-
----
-
-## A.7 Privileged Commands
-
-Privileged commands execute only when sufficient architectural privilege exists.
-
----
-
-## A.8 Future Categories
-
-Compatible community additions may introduce additional command categories while preserving Base DCA compatibility.
-
-# Appendix B — Processor Execution States
-
-## B.1 Overview
-
-This appendix summarizes the logical execution states of a DCA-compatible processor.
-
----
-
-## B.2 Fetch
-
-Retrieve the next Architectural Command Unit.
-
----
-
-## B.3 Decode
-
-Determine command identity and operands.
-
----
-
-## B.4 Validate
-
-Verify command correctness before execution.
-
----
-
-## B.5 Execute
-
-Perform the architectural operation.
-
----
-
-## B.6 Commit
-
-Update architectural processor state.
-
----
-
-## B.7 Advance
-
-Move to the next Architectural Command Unit.
-
----
-
-## B.8 Exception
-
-Suspend normal execution and transfer control to the architectural exception handler.
-
----
-
-## B.9 Reset
-
-Initialize processor state before execution begins.
-
-# Appendix C — Architectural Validation Summary
-
-## C.1 Validation Checklist
-
-Before executing an Architectural Command Unit, processors shall verify:
-
-* Command integrity
-* Command alignment
-* Instruction identity
-* Operand count
-* Operand types
-* Register references
-* Immediate value representation
-* Memory permissions
-* Execute permissions
-* Privilege requirements
-
----
-
-## C.2 Failure Handling
-
-Validation failures shall generate the corresponding architectural exception before execution begins.
-
----
-
-## C.3 Processor Guarantee
-
-Processors shall never execute commands that fail architectural validation.
-
-# Appendix D — Compliance Checklist
-
-## D.1 Processor Requirements
-
-A DCA-compatible processor shall correctly implement:
-
-* Command Fetch
-* Command Decode
-* Command Validation
-* Command Execution
-* Processor State Management
-* Memory Access Processing
-* Control Flow Processing
-* Exception Generation
-* Privilege Enforcement
-* Reset Processing
-
----
-
-## D.2 Compatibility
-
-Processors claiming compatibility shall preserve all mandatory behavior defined by:
-
-* Doublers ISA
-* Doublers Command Architecture
-
----
-
-## D.3 Community Additions
-
-Community additions shall not alter mandatory Base DCA behavior.
-
-# Appendix E — Reserved Architectural Space
-
-## E.1 Overview
-
-Reserved architectural space exists to support future evolution of the Doublers architecture.
-
----
-
-## E.2 Reserved Commands
-
-Unused command representations are reserved.
-
-Processors shall reject undefined commands unless assigned by compatible community additions.
-
----
-
-## E.3 Reserved Register References
-
-Unused register identifiers remain reserved for future expansion.
-
----
-
-## E.4 Reserved Operand Types
-
-Unused operand representations remain reserved.
-
----
-
-## E.5 Reserved Immediate Formats
-
-Unused immediate representations remain reserved.
-
----
-
-## E.6 Forward Compatibility
-
-Future DCA revisions may assign meanings to reserved architectural space while preserving compatibility whenever practical.
+*End of DCA Specification v1.0*
