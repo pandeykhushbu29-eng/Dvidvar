@@ -67,7 +67,29 @@ The first public version of the Doublers ISA and DCA was created by **Avyaan Mis
 ---
 
 NOTE:
-visit https://github.com/pandeykhushbu29-eng/Dob-VCS and https://github.com/pandeykhushbu29-eng/DULO these are my second and third project, respectively!
+
+I have many more projects
+to know 'em all, visit
+these:
+
+[https://github.com/pandeykhushbu29-eng/Dvidvar]
+
+[https://github.com/pandeykhushbu29-eng/Dormals-AI-companion]
+
+[https://github.com/pandeykhushbu29-eng/Dormals]
+
+[https://github.com/pandeykhushbu29-eng/DOARCE]
+
+[https://github.com/pandeykhushbu29-eng/Dob-VCS]
+
+[https://github.com/pandeykhushbu29-eng/Doton-OS]
+
+[https://github.com/pandeykhushbu29-eng/Doton]
+
+[https://github.com/pandeykhushbu29-eng/DULO]
+ [https://huggingface.co/datasets/Clobax-Creator/Dvidata]
+
+[https://huggingface.co/spaces/Clobax-Creator/Dvi-Coder.web/tree/main]
 
 ---
 
