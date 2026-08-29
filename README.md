@@ -1,121 +1,30 @@
-<!--
-Copyright (C) 2024 Avyaan Mishra
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 # Dvidvar
 
-> **An open computer architecture for anyone.**
+Copyright (C) 2026 Avyaan Mishra
 
-Doublers (Nickname of Dvidvar) is an open computer architecture consisting of the **Doublers Instruction Set Architecture (ISA)** and the **Doublers Command Architecture (DCA)**.
+Dvidvar is a ternary (non-binary) instruction set architecture that uses **trits** (ternary digits), **trytes** (ternary bytes), and **Kleene K3 logic** instead of the conventional binary system.
 
-Its purpose is not to replace existing computer architectures, but to provide an independent architecture with its own ecosystem that anyone may study, implement, improve, and build upon.
----
+## Repositories
 
-# Components
+This repository contains specifications and documentation for the Dvidvar ecosystem.
 
-- 📘 Doublers ISA - 📗 Doublers Command Architecture (DCA) - 📜 DCA License
+## Files
 
----
+- `ISA.md` — Instruction Set Architecture specification
+- `DCA.md` — Dvidvar Command Architecture
+- `README.md` — This file
+- `Version file.md` — Version information
+- `LICENSE` — License terms
 
-# Goals
+## License
 
-- Create an independent computer architecture. - Encourage compatible hardware and software. - Preserve long-term architectural compatibility. - Allow the community to improve the specifications while preserving their architectural meaning. - Provide an open ecosystem for learning, research, and development.
----
+Copyright (C) 2026 Avyaan Mishra
+(C) Dvidvar Community
 
-# Community
+This project is licensed under the terms specified in the LICENSE file.
 
-Anyone may:
-- Read the specifications. - Study the architecture. - Build compatible hardware. - Build compatible software. - Improve the official specifications while preserving their original architectural meaning. - Create compatible extensions.
-See the **DCA License** for complete licensing terms.
----
+## Creator
 
-# Compatibility
+**Clobax-Creator (Avyaan Mishra)**
 
-Any implementation claiming compatibility with the official Doublers ISA or DCA shall preserve the architectural behavior defined by the official specifications.
-Community improvements to the documentation are encouraged, provided they do not change the meaning or compatibility of the architecture.
----
-
-# Project History
-
-The first public version of the Doublers ISA and DCA was created by **Avyaan Mishra** (Creator name is **Doub.creator_0001**) in **2026**, when the author was **11 years old**.His Country of Origin is **INDIA**
-
----
-
-> [!NOTE]
-> If you're reading this years from now—thank you.
->
-> I created the first version of Doublers when I was 11 years old.
-> As I grow older, life may become busy, and I might not always be able to actively work on the project.
->
-> If that happens, I hope the community continues to improve Doublers while preserving its compatibility and original vision.
-> I'll do my best to return whenever I can.
-> — Avyaan Mishra (Doub.creator_00001)
-
----
-
-NOTE:
-
-I have many more projects
-to know 'em all, visit
-these:
-
-[https://github.com/pandeykhushbu29-eng/Dvidvar]
-
-[https://github.com/pandeykhushbu29-eng/Dormals-AI-companion]
-
-[https://github.com/pandeykhushbu29-eng/Dormals]
-
-[https://github.com/pandeykhushbu29-eng/DOARCE]
-
-[https://github.com/pandeykhushbu29-eng/Dob-VCS]
-
-[https://github.com/pandeykhushbu29-eng/Doton-OS]
-
-[https://github.com/pandeykhushbu29-eng/Doton]
-
-[https://github.com/pandeykhushbu29-eng/DULO]
- [https://huggingface.co/datasets/Clobax-Creator/Dvidata]
-
-[https://huggingface.co/spaces/Clobax-Creator/Dvi-Coder.web/tree/main]
-
----
-
-  ## Contributing
-
-Doublers is intended to be a community-driven open Instruction Set Architecture (ISA) specification.
-The long-term evolution of this specification does **not** depend on the continued involvement of the original author.
-If the original author becomes inactive or unavailable, contributors are encouraged to continue improving the specification through community collaboration.
-Future maintainers may:
-- Review and merge specification improvements. - Publish revised specification versions. - Expand the ISA while preserving compatibility whenever practical. - Maintain reference implementations, assemblers, compilers, simulators, and compliance suites.
-Contributors should strive to ensure that changes remain:- Technically justified. - Well documented. - Backward compatible whenever practical. - Consistent with the architectural goals of Doublers. - Suitable for independent implementation.
-
-## Governance
-
-Doublers has no permanently required maintainer.
-The original author initiated the project, but the specification is intended to evolve through community stewardship.
-Should the original author become inactive or permanuntly unavailable, the community is encouraged to continue development by establishing new maintainers through open discussion and transparent decision-making.
-No individual is required for Doublers to continue evolving.
-
----
-
-© 2026 Avyaan Mishra
-
-Released under the **DCA License v1.0**
-
----
-
-# "Specifications create possibilities. Implementations bring them to life."
-
+"Compatibility is more important than identical implementation."
