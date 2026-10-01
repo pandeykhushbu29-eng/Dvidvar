@@ -2,7 +2,7 @@
 
 ## 1.1 Purpose
 
-Doublers is an open 64-bit Instruction Set Architecture (ISA) designed to be simple, predictable, and practical. It is intended for operating systems, systems software, compilers, educational use, and future hardware implementations.
+Doublers is an open 64-trit Instruction Set Architecture (ISA) designed to be simple, predictable, and practical. It is intended for operating systems, systems software, compilers, educational use, and future hardware implementations.
 
 The ISA defines the behavior of processors that execute Doublers instructions. It does not define the physical design of a processor. Hardware designers are free to implement the ISA using any suitable architecture, provided the implementation behaves according to this specification.
 
