@@ -71,7 +71,7 @@ Future revisions may introduce optional extensions while preserving compatibilit
 
 Doublers is intended to be an open architecture.
 
-Any individual or organization may develop compatible software, tools, simulators, operating systems, compilers, debuggers, or hardware implementations that conform to this specification, subject to the applicable community and licensing rules.
+Any individual or organization may develop compatible software, tools, simulators, operating systems, compilers, debuggers, or hardware implementations that conform to this specification, subject to the project’s chosen license.
 
 ---
 
@@ -92,6 +92,10 @@ Operand — Data supplied to an instruction.
 Extension — An optional group of additional instructions beyond the Base ISA.
 
 Trit — A ternary digit representing one of three values: 0, 1, or 2.
+
+Ternary — Base-3 numeric representation.
+
+Trit word — A fixed-width collection of trits used as a logical data unit.
 
 ---
 
@@ -177,7 +181,7 @@ Tracks the top of the active stack.
 
 **BP** — Base Pointer
 
-Provides a stable reference for stack frames.
+Provides a stable reference point for stack frames.
 
 **FLAGS** — Status Register
 
@@ -257,6 +261,8 @@ To encourage continued development, the community is permitted to create compati
 
 The original Doublers ISA v1.0 shall remain the reference foundation for the architecture.
 
+---
+
 # Chapter 3 — Register Architecture
 
 ## 3.1 Overview
@@ -322,23 +328,17 @@ The IP register stores the address of the next instruction to execute.
 
 Control-flow instructions modify the IP directly.
 
----
-
 ### Stack Pointer (SP)
 
 The SP register identifies the top of the current stack.
 
 Stack instructions automatically update the SP register.
 
----
-
 ### Base Pointer (BP)
 
 The BP register provides a stable reference point for stack frames.
 
 Its usage is optional and determined by software.
-
----
 
 ### FLAGS Register
 
@@ -396,6 +396,8 @@ A processor shall be considered compliant with this chapter only if it:
 * Implements all required special registers.
 * Supports sixty-four-trit register operations.
 * Preserves the architectural behavior defined in this chapter.
+
+---
 
 # Chapter 4 — Memory Architecture
 
@@ -558,6 +560,8 @@ A processor is compliant with this chapter if it:
 * Correctly performs all defined memory operations.
 * Preserves architectural compatibility with the Base ISA.
 
+---
+
 # Chapter 5 — Instruction Set Architecture
 
 ## 5.1 Overview
@@ -569,7 +573,7 @@ Instructions are fixed-size ternary commands executed by the processor. Each ins
 The Doublers-64 ISA is designed with the following goals:
 
 - Simple decoding
-- High performance execution
+- High-performance execution
 - Easy compiler support
 - Future expansion capability
 - Strong separation between user and privileged operations
@@ -717,6 +721,10 @@ RD = RS1 - RS2
 Example:
 
 SUB D4, D5, D6
+
+Meaning:
+
+D4 = D5 - D6
 
 ### MUL
 
@@ -970,7 +978,7 @@ Attempting to execute a privileged instruction without permission generates a pr
 
 Operation:
 
-Change CPU privilege level
+Change CPU privilege level.
 
 ### RSYS
 
@@ -988,13 +996,13 @@ System_Register = RD
 
 Operation:
 
-Stop processor execution
+Stop processor execution.
 
 ### SYSCALL
 
 Operation:
 
-Transfer execution into kernel functionality
+Transfer execution into kernel functionality.
 
 ---
 
@@ -1290,6 +1298,8 @@ The Base ISA requires support for:
 
 Trit — A ternary digit with one of three possible states: 0, 1, or 2.
 
+Ternary — A base-3 number system.
+
 ISA — Instruction Set Architecture.
 
 DCA — Doublers Command Architecture.
@@ -1429,5 +1439,5 @@ Execution of a reserved instruction shall generate an Illegal Instruction Except
 
 # Appendix E — Final Note
 
-This document has been updated to use trit-based terminology throughout the ISA specification, replacing bit-focused language with trit-focused terminology while preserving the architectural intent of the original design.
+This document has been updated to standardize terminology around the trit-based architecture model, replacing bit-oriented wording with consistent trit-oriented terminology while preserving the original architectural intent and compatibility goals.
 
