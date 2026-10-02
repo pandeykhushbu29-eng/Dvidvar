@@ -23,8 +23,14 @@ Copyright (C) 2026 Avyaan Mishra
 
 This project is licensed under the terms specified in the LICENSE file.
 
-## Creator
+## Creator Identity
 
 **Clobax-Creator (Avyaan Mishra)**
+
+**Age - 11 years old**
+
+**Country of origin - India**
+
+
 
 "Compatibility is more important than identical implementation."
